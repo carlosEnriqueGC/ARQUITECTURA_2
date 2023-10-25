@@ -42,12 +42,15 @@ principal:
         
     
 uno:
-    
+    mov ax, 00h
+    mov bx, 00h
+    mov cx, 00h
+    mov dx, 00h
     
     video1:
     mov ah, 00h
     mov al, 00h
-    int 10h
+    int 13h
     jmp principal1
 
 principal1:
@@ -56,7 +59,7 @@ principal1:
     mov cx, 00h
     mov dx, 00h
 
-    mov ax, 1
+    mov ax, 2
     int 10h
 
     mov ah, 09h
@@ -81,7 +84,7 @@ suma1:
     mov ax, 2
     int 10h
 
-    ; Primer nÃºmero
+    ; Primer número
     mov ah, 09h
     lea dx, msg1
     int 21h
@@ -100,7 +103,7 @@ suma1:
     lea dx, msge1
     int 21h
 
-    ; Ingresa el segundo nÃºmero
+    ; Ingresa el segundo número
     mov ah, 09h
     lea dx, msg1
     int 21h
@@ -155,60 +158,82 @@ suma1:
 
     jmp principal1
 
-resta1:
-    mov ax, 2
+resta1: 
+    
+     mov ax, 2
     int 10h
-
-    ; Primer nÃºmero
+    
+    ; Primer número
     mov ah, 09h
     lea dx, msg1
     int 21h
-
+    
     mov ah, 01h
     int 21h
-    sub al, '0'
-    mov [c1_num1], al
-
+    sub al, 30h
+    
+    mov bl, al
+    
     mov ah, 01h
     int 21h
-    sub al, '0'
-    mov [c2_num1], al
-
-    ; Segundo nÃºmero
+    sub al, 30h
+    mov cl, al
+    
     mov ah, 09h
     lea dx, msge1
     int 21h
-
+    
+    ; Ingresar segundo número
     mov ah, 09h
     lea dx, msg1
     int 21h
-
+    
     mov ah, 01h
     int 21h
-    sub al, '0'
-    mov [c1_num2], al
-
+    sub al, 30h
+    
+    mov bh, al
+    
     mov ah, 01h
     int 21h
-    sub al, '0'
-    mov [c2_num2], al
-
-    ; Proceso de resta
-    mov al, [c1_num1]
-    sub al, [c1_num2]
-    mov [resultado1], al
-
-    ; Mostrar mensaje para el resultado de la resta
+    sub al, 30h
+    mov ch, al
+    
+    ; Realizar la resta
+    sub cl, ch  ; Resta los dígitos de las unidades
+    sub bl, bh  ; Resta los dígitos de las decenas
+    
+    ; Manejar el acarreo
+    cmp cl, 0
+    jge mostrar_resultado
+    dec bl
+    add cl, 10
+    
+    mostrar_resultado:   
+    
+    mov ah, 09h
+    lea dx, msge1
+    int 21h
+    
     mov ah, 09h
     lea dx, msgr1
     int 21h
-
-    ; Mostrar el resultado de la resta en resultado1
+    
+    ; Mostrar el resultado
     mov ah, 02h
-    mov dl, [resultado1]
-    add dl, '0'
+    mov dl, bl
+    add dl, 30h
     int 21h
-
+    
+    mov ah, 02h
+    mov dl, cl
+    add dl, 30h
+    int 21h
+    
+    mov ah, 01h
+    int 21h
+    
+                 
     ; Esperar a que se presione una tecla antes de salir
     mov ah, 0
     int 16h
@@ -217,7 +242,7 @@ resta1:
 
 multi1:
     mov ax, 2
-    int 10h    ; aquÃ­ se expande la pantalla para mayor visualizaciÃ³n
+    int 10h    ; aquí se expande la pantalla para mayor visualización
 
     ; Esperar a que se presione una tecla antes de salir
     mov ah, 0
@@ -250,7 +275,7 @@ salir:
   
   
 opcion db 0
-    msgm db "Proyecto Universidad Mariano Galvez",13,10,"Carlos Guzman y Diego Marroquin",13,10,"opciones:",13,10," 1. operaciones basicas",13,10," 2. ",13,10," 3. ",13,10," 4. ",13,10," 5. ",13,10,"presione Esc para salir",13,10,"opcion: $"
+    msgm db "Proyecto Universidad Mariano Galvez",13,10,"Carlos Guzman y Diego Marroquin",13,10,"opciones:",13,10," 1. Operaciones basicas",13,10," 2. Operaciones con cadenas",13,10," 3. ",13,10," 4. ",13,10," 5. ",13,10,"presione Esc para salir",13,10,"opcion: $"
     
     ;variables programa 1
     
@@ -260,7 +285,7 @@ opcion db 0
     c2_num2 db 0 ; usados para la resta 
    
     resultado1  db 0
-    menu1 db " Practica P2 operaciones de 2 numeros",13,10," Sub-menu de opciones: ",13,10,"  1. suma",13,10,"  2. resta",13,10,"  3. multiplicacion",13,10," Tecla espacio para regresar al menu principal",13,10," Opcion: $" 
+    menu1 db " Operaciones basicas",13,10," Sub-menu de opciones: ",13,10,"  1. suma",13,10,"  2. resta",13,10,"  3. multiplicacion",13,10," Tecla espacio para regresar al menu principal",13,10," Opcion: $" 
                                       
     msg1 db " Ingrese un numero (puede ser de dos cifras): $" 
     msge1 db "  ",13,10,"$"
