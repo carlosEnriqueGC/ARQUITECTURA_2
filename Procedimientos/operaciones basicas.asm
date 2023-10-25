@@ -20,7 +20,7 @@ principal:
     int 10h
      
     mov ah, 09h
-    mov dx, offset menu
+    lea dx, menu
     int 21h
 
     mov ah,01h
@@ -131,85 +131,80 @@ suma:
 
 resta:
  
-     mov ax,2
-    int 10h    ; aqui se expande la pantalla para mayor visualizacion 
+    mov ax, 2
+    int 10h
     
-    ;primero numero 
-    mov ah,09h
+    ; Primer número
+    mov ah, 09h
     lea dx, msg
     int 21h
     
-    
-    mov ah,01h
+    mov ah, 01h
     int 21h
-    sub al,'0'
+    sub al, 30h
     
-    mov [c1_num1],al 
+    mov bl, al
     
-    mov ah,01h
+    mov ah, 01h
     int 21h
-    sub al,'0'
+    sub al, 30h
+    mov cl, al
     
-    mov [c2_num1],al 
-    
-    ;segundo numero 
-    mov ah,09h
-    lea dx, msge
-    int 21h
-    
-     mov ah,09h
-    lea dx, msg
-    int 21h
-    
-    
-    mov ah,01h
-    int 21h
-    sub al,'0'
-    
-    mov [c1_num2],al 
-    
-    mov ah,01h
-    int 21h
-    sub al,'0'
-    
-    mov [c2_num2],al 
-    
-    ; Proceso de resta
-    mov al, 00h
-
-    mov bl, [c1_num1]
-    mov cl, [c2_num1]
-    mov al, [c1_num2]
-    mov dl, [c2_num2]
-
-    sub bl, al
-    sub cl, dl
-
-    ; Convertir BL y CL de ASCII a valores numéricos
-    add bl, '0'
-    add cl, '0'
-        
-    ; Mostrar mensaje para el resultado de la resta
     mov ah, 09h
     lea dx, msge
     int 21h
-           
+    
+    ; Ingresar segundo número
+    mov ah, 09h
+    lea dx, msg
+    int 21h
+    
+    mov ah, 01h
+    int 21h
+    sub al, 30h
+    
+    mov bh, al
+    
+    mov ah, 01h
+    int 21h
+    sub al, 30h
+    mov ch, al
+    
+    ; Realizar la resta
+    sub cl, ch  ; Resta los dígitos de las unidades
+    sub bl, bh  ; Resta los dígitos de las decenas
+    
+    ; Manejar el acarreo
+    cmp cl, 0
+    jge mostrar_resultado
+    dec bl
+    add cl, 10
+    
+    mostrar_resultado:   
+    
+    mov ah, 09h
+    lea dx, msge
+    int 21h
+    
     mov ah, 09h
     lea dx, msgr
-    int 21h  
-   
-      ; Mostrar el resultado de la resta en BL y CL
+    int 21h
+    
+    ; Mostrar el resultado
     mov ah, 02h
     mov dl, bl
+    add dl, 30h
     int 21h
-
+    
     mov ah, 02h
     mov dl, cl
+    add dl, 30h
     int 21h
-   
-  
-        
-               
+    
+    mov ah, 01h
+    int 21h
+    
+                 
     ; Esperar a que se presione una tecla antes de salir
     mov ah, 0
     int 16h
@@ -236,7 +231,7 @@ fin:
    int 10h
    
    mov ah, 09h
-   mov dx, offset msgf
+   lea dx,  msgf
    int 21h    
    
    
