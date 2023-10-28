@@ -1,7 +1,7 @@
 
 ; You may customize this and other start-up templates; 
 ; The location of this template is c:\emu8086\inc\0_com_template.txt
-
+;carlos enrique
 video:
     mov ah, 00h
     mov al, 03h ; Cambiado a modo de vídeo 3 (80x25)
