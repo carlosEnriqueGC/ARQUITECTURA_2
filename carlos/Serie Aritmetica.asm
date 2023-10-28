@@ -40,6 +40,11 @@ proceso:
 
     sub al, '0'
     mov [inicial], al
+    
+    
+    mov ah, 09h
+    lea dx, msgE ; separamos
+    int 21h
 
     mov ah, 09h
     lea dx, msgS ; Ingresamos el número a sumar con el inicial
@@ -50,6 +55,11 @@ proceso:
 
     sub al, '0'
     mov [sumar], al
+    
+    
+    mov ah, 09h
+    lea dx, msgE ; separamos
+    int 21h
 
     mov ah, 09h
     lea dx, msgC ; Ingresamos la cantidad de términos a mostrar
@@ -59,7 +69,12 @@ proceso:
     int 21h
 
     sub al, '0'
-    mov [cantidad], al
+    mov [cantidad], al  
+    
+    
+    mov ah, 09h
+    lea dx, msgE ; separamos
+    int 21h
 
     mov [contador], 0     
     
@@ -75,10 +90,13 @@ bucle:
 
     mov al, [inicial] 
     add al, [sumar]  
-    add al, '0'   ; este es la solucion de que el programa no muestra nada
-
+    mov [inicial],al 
+    
+    
+    add al, '0'
     mov ah, 0Eh
     int 10h
+    
 
     mov bl, [contador]
     mov cl, [cantidad]
@@ -88,7 +106,10 @@ bucle:
     int 16h
 
     jae principal
-
+    
+    
+    mov al, 00h
+    mov ah, 00h
     loop bucle
 
 salir:
@@ -104,6 +125,7 @@ cantidad db 0
 contador db 0
 
 msgm db "Operacion de recurrencia", 13, 10, "Sub-menú", 13, 10, "opciones:", 13, 10, " 1. Operacion Aritmetica", 13, 10, " 2. Regresar al menu principal", 13, 10, "opcion: $"
-msgI db "Numero inicial: $ "
-msgS db "Numero a sumar: $ "
-msgC db "Cantidad de términos: $ "
+msgI db "Numero inicial: $"
+msgS db "Numero a sumar: $"
+msgC db "Cantidad de terminos: $" 
+msgE db "  ", 13, 10, "$"
