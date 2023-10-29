@@ -124,7 +124,7 @@ sumar db 0
 cantidad db 0
 contador db 0
 
-msgm db "Operacion de recurrencia", 13, 10, "Sub-menú", 13, 10, "opciones:", 13, 10, " 1. Operacion Aritmetica", 13, 10, " 2. Regresar al menu principal", 13, 10, "opcion: $"
+msgm db "Operacion de recurrencia", 13, 10, "Sub-menu", 13, 10, "opciones:", 13, 10, " 1. Operacion Aritmetica", 13, 10, " 2. Regresar al menu principal", 13, 10, "opcion: $"
 msgI db "Numero inicial: $"
 msgS db "Numero a sumar: $"
 msgC db "Cantidad de terminos: $" 
