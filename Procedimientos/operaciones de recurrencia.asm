@@ -131,9 +131,7 @@ bucle:
     mov ah, 00h
     loop bucle
 
-salir:
-    mov ax, 1
-    int 10h
+
 
 numero_invalido_inicial: 
     mov ax, 2
@@ -169,7 +167,10 @@ numero_invalido_cantidad:
     
     mov ah, 0
     int 16h
-    jmp proceso
+    jmp proceso 
+    
+salir:
+  
 
 ret
 
