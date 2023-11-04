@@ -7,9 +7,9 @@ video:
     mov ah,00h
     mov al,00h         ;configurar video
     int 10h
-    jmp principal
+    jmp Submenu1
 
-principal: 
+Submenu1: 
 
     mov ax, 00h
     mov bx, 00h
@@ -35,8 +35,10 @@ principal:
     je resta
      cmp [opcion], '3'
     je multi
-    cmp [opcion], 020h
-    je fin
+    cmp [opcion], '4'
+    je salida
+    
+    jmp error
 
 suma: 
     
@@ -125,7 +127,7 @@ suma:
     mov ah, 0
     int 16h 
        
-    jmp principal
+    jmp Submenu1
            
     
 
@@ -209,38 +211,167 @@ resta:
     mov ah, 0
     int 16h
 
-    jmp principal
+    jmp Submenu1
 
 
 multi:
-     mov ax,2
+    mov ax,2
     int 10h    ; aqui se expande la pantalla para mayor visualizacion 
     
+          
+    numero macro var
+       mov ah,01h         ;Function(character read)
+       int 21h            ;Interruption DOS functions
+       sub al,30h         ;Convertimos a decimal
+       mov var,al         ;Almacenamos en varible
+    endm
     
+    caracter macro chr
+       mov ah,02h         ;Function(character to send to standard output)
+       mov dl,chr         ;Caracter a imprimir en pantalla
+       int 21h            ;Interruption DOS functions
+    endm
     
+    multiplicar macro var1, var2
+       mov al,var1
+       mov bl,var2
+       mul bl
+    endm
     
+    separar macro alta, baja
+       mov ah,00h          ;Se limpia la parte alta de ax
+       AAM                 ;Separa el registro ax en su parte alta y baja
+       mov alta,ah
+       mov baja,al
+    endm
     
+    resultado macro var
+       mov ah,02h 
+       mov dl,var
+       add dl,30h
+       int 21h
+    endm
+    
+     ;Definicion de datos(variables), donde se almacenara informacion
+       ;Variables del primer numero ingresado
+       unidades_n1      db ? 
+       decenas_n1       db ?
+       
+       ;Variables del segundo numero ingresado 
+       unidades_n2      db ?
+       decenas_n2       db ?
+       
+       ;Variables temporales para los resultados de la primera multiplicacion
+       res_temp_dec_n1  db ?
+       res_temp_cen_n1  db ?
+       
+       ;Variables temporales para los resultados de la segunda multiplicacion
+       res_temp_dec_n2  db ?
+       res_temp_cen_n2  db ?
+       
+       ;Variables para los resultados 
+       res_unidades     db ?
+       res_decenas      db ?
+       res_centenas     db ?
+       res_uni_millar   db ?
+       
+       ;Variable de acarreo en multiplicacion
+       acarreo_mul      db 0
+       
+       ;Variable de acarreo en suma
+       acarreo_suma     db 0
+    
+      
+       
+    
+       
+       mov ah,00h         ;Function(Set video mode)
+       mov al,03          ;Mode 80x25 8x8 16
+       int 10h            ;Interruption Video
+    
+       numero decenas_n1
+       numero unidades_n1
+       caracter '*'
+       numero decenas_n2 
+       numero unidades_n2
+       caracter '='
+     
+       ;Realizamos las operaciones   
+       
+       ;Primera multiplicacion
+       multiplicar unidades_n1, unidades_n2  
+       separar acarreo_mul, res_unidades 
+    
+       
+       ;Segunda multiplicacion
+       multiplicar decenas_n1, unidades_n2   
+       mov res_temp_dec_n1,al   
+       mov bl,acarreo_mul       
+       add res_temp_dec_n1,bl 
+       mov al,res_temp_dec_n1
+       separar res_temp_cen_n1, res_temp_dec_n1      
+        
+       ;Tercera multiplicacion
+       multiplicar unidades_n1, decenas_n2
+       separar acarreo_mul, res_temp_dec_n2
+       ;Suma -> Decenas         
+       mov bl, res_temp_dec_n1  
+       add res_temp_dec_n2,bl   
+       mov al, res_temp_dec_n2      
+       separar acarreo_suma, res_decenas
+       
+       ;Cuarta multiplicacion
+       multiplicar decenas_n1, decenas_n2   
+       mov res_temp_cen_n2,al    
+       mov bl,acarreo_mul       
+       add res_temp_cen_n2,bl             
+       mov al,res_temp_cen_n2
+       separar res_uni_millar, res_temp_cen_n2     
+       ;Suma -> Centenas        
+       mov bl, res_temp_cen_n1  
+       add res_temp_cen_n2, bl  
+       mov bl, acarreo_suma     
+       add res_temp_cen_n2,bl               
+       mov al,res_temp_cen_n2  
+       separar acarreo_suma, res_centenas 
+       
+       ;Acarreo para unidades de millar                         
+       mov bl, acarreo_suma     
+       add res_uni_millar, bl   
+     
+       ;Mostramos resultados
+       resultado res_uni_millar   
+       resultado res_centenas   
+       resultado res_decenas 
+       resultado res_unidades
+           
+
     ; Esperar a que se presione una tecla antes de salir
     mov ah, 0
     int 16h
 
-    jmp principal
+    jmp Submenu1
    
-fin:
+salida:
    mov ax, 1
    int 10h
    
-   mov ah, 09h
-   lea dx,  msgf
-   int 21h    
-   
-   
-   mov ah,0
-   int 16h
    ret
    
+error:
+   mov ax, 2
+   int 10h
    
-    
+   
+   mov ah, 09h
+   lea dx, msgError
+   int 21h
+           
+   mov ah, 0
+   int 16h
+   jmp Submenu1
+   
+;variables    
     opcion db 0  
     c1_num1 db 0 ; usados para la resta
     c2_num1 db 0 ; usados para la resta
@@ -248,9 +379,10 @@ fin:
     c2_num2 db 0 ; usados para la resta 
    
     resultado1  db 0
-    menu db " Practica P2 operaciones de 2 numeros",13,10," Menu de opciones: ",13,10,"  1. suma",13,10,"  2. resta",13,10,"  3. multiplicacion",13,10," Tecla espacio para salir",13,10," Opcion: $" 
+    menu db " Operaciones Basicas",13,10," Submenu: ",13,10," 1. suma",13,10," 2. resta",13,10," 3. multiplicacion",13,10," 4. regresar al menu principal",13,10," Opcion: $" 
                                       
     msg db " Ingrese un numero (puede ser de dos cifras): $" 
     msge db "  ",13,10,"$"
-    msgr db " Resultado: $" 
-    msgf db " Adios :) $"
+    msgr db " Resultado: $"
+    msgError db " Ups has ingresado un numero invalido o una letra $" 
+

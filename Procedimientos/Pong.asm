@@ -30,7 +30,7 @@ DATA SEGMENT PARA 'DATA'
     TEXT_MAIN_MENU_TITLE DB 'MENU PRINCIPAL','$'             ; Texto con el titulo del menu principal
     TEXT_MAIN_MENU_SINGLEPLAYER DB 'UN JUGADOR - Tecla S','$' ; Texto con el mensaje de un jugador en el menu principal
     TEXT_MAIN_MENU_MULTIPLAYER DB 'MULTIJUGADOR - Tecla M','$' ; Texto con el mensaje de multijugador en el menu principal
-    TEXT_MAIN_MENU_EXIT DB 'SALIR DEL JUEGO - Tecla E','$'   ; Texto con el mensaje de salir del juego
+    TEXT_MAIN_MENU_EXIT DB 'SALIR DEL JUEGO - Tecla 0','$'   ; Texto con el mensaje de salir del juego
 	
 	BALL_ORIGINAL_X DW 0A0h              ; Posicion X de la pelota al comienzo del juego
 	BALL_ORIGINAL_Y DW 64h               ; Posicion Y de la pelota al comienzo del juego
@@ -661,7 +661,7 @@ CHECK_RIGHT_PADDLE_MOVEMENT:
 			JE START_MULTIPLAYER
 			CMP AL,'E'
 			JE EXIT_GAME
-			CMP AL,'e'
+			CMP AL,'0'
 			JE EXIT_GAME
 			JMP MAIN_MENU_WAIT_FOR_KEY
 			
