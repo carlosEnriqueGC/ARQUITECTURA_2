@@ -21,16 +21,16 @@ DATA SEGMENT PARA 'DATA'
 	WINNER_INDEX DB 0              ; indice del ganador (1 -> jugador uno, 2 -> jugador dos)
 	CURRENT_SCENE DB 0             ; indice de la escena actual (0 -> menú principal, 1 -> juego)
 	
-TEXT_PLAYER_ONE_POINTS DB '0','$'                       ; Texto con los puntos del jugador uno
-TEXT_PLAYER_TWO_POINTS DB '0','$'                       ; Texto con los puntos del jugador dos
-TEXT_GAME_OVER_TITLE DB 'FIN DEL JUEGO','$'              ; Texto con el titulo del menu de fin del juego
-TEXT_GAME_OVER_WINNER DB 'El Jugador 0 gano','$'         ; Texto con el mensaje del ganador
-TEXT_GAME_OVER_PLAY_AGAIN DB 'Presiona R para jugar de nuevo','$' ; Texto con el mensaje para jugar de nuevo en el fin del juego
-TEXT_GAME_OVER_MAIN_MENU DB 'Presiona E para regresar al menu principal','$' ; Texto con el mensaje para regresar al menu principal en el fin del juego
-TEXT_MAIN_MENU_TITLE DB 'MENU PRINCIPAL','$'             ; Texto con el titulo del menu principal
-TEXT_MAIN_MENU_SINGLEPLAYER DB 'UN JUGADOR - Tecla S','$' ; Texto con el mensaje de un jugador en el menu principal
-TEXT_MAIN_MENU_MULTIPLAYER DB 'MULTIJUGADOR - Tecla M','$' ; Texto con el mensaje de multijugador en el menu principal
-TEXT_MAIN_MENU_EXIT DB 'SALIR DEL JUEGO - Tecla E','$'   ; Texto con el mensaje de salir del juego
+    TEXT_PLAYER_ONE_POINTS DB '0','$'                       ; Texto con los puntos del jugador uno
+    TEXT_PLAYER_TWO_POINTS DB '0','$'                       ; Texto con los puntos del jugador dos
+    TEXT_GAME_OVER_TITLE DB 'FIN DEL JUEGO','$'              ; Texto con el titulo del menu de fin del juego
+    TEXT_GAME_OVER_WINNER DB 'El Jugador 0 gano','$'         ; Texto con el mensaje del ganador
+    TEXT_GAME_OVER_PLAY_AGAIN DB 'Presiona R para jugar de nuevo','$' ; Texto con el mensaje para jugar de nuevo en el fin del juego
+    TEXT_GAME_OVER_MAIN_MENU DB 'Presiona E para regresar al menu principal','$' ; Texto con el mensaje para regresar al menu principal en el fin del juego
+    TEXT_MAIN_MENU_TITLE DB 'MENU PRINCIPAL','$'             ; Texto con el titulo del menu principal
+    TEXT_MAIN_MENU_SINGLEPLAYER DB 'UN JUGADOR - Tecla S','$' ; Texto con el mensaje de un jugador en el menu principal
+    TEXT_MAIN_MENU_MULTIPLAYER DB 'MULTIJUGADOR - Tecla M','$' ; Texto con el mensaje de multijugador en el menu principal
+    TEXT_MAIN_MENU_EXIT DB 'SALIR DEL JUEGO - Tecla E','$'   ; Texto con el mensaje de salir del juego
 	
 	BALL_ORIGINAL_X DW 0A0h              ; Posicion X de la pelota al comienzo del juego
 	BALL_ORIGINAL_Y DW 64h               ; Posicion Y de la pelota al comienzo del juego
@@ -209,34 +209,34 @@ MOVE_BALL_VERTICALLY:
     CMP AX, PADDLE_RIGHT_X
     JNG CHECK_COLLISION_WITH_LEFT_PADDLE ; Si no hay colision, verificar las colisiones con la paleta izquierda
     
-		MOV AX, PADDLE_RIGHT_X
-ADD AX, PADDLE_WIDTH
-CMP BALL_X, AX
-JNL CHECK_COLLISION_WITH_LEFT_PADDLE  ; Si no hay colision, verificar las colisiones con la paleta izquierda
+	MOV AX, PADDLE_RIGHT_X
+    ADD AX, PADDLE_WIDTH
+    CMP BALL_X, AX
+    JNL CHECK_COLLISION_WITH_LEFT_PADDLE  ; Si no hay colision, verificar las colisiones con la paleta izquierda
+    
+    MOV AX, BALL_Y
+    ADD AX, BALL_SIZE
+    CMP AX, PADDLE_RIGHT_Y
+    JNG CHECK_COLLISION_WITH_LEFT_PADDLE  ; Si no hay colision, verificar las colisiones con la paleta izquierda
+    
+    MOV AX, PADDLE_RIGHT_Y
+    ADD AX, PADDLE_HEIGHT
+    CMP BALL_Y, AX
+    JNL CHECK_COLLISION_WITH_LEFT_PADDLE  ; Si no hay colision, verificar las colisiones con la paleta izquierda
+    
+    ; Si llega a este punto, la pelota esta colisionando con la paleta derecha
+    JMP NEG_VELOCITY_X
+    
+    ; Comprobar si la pelota está colisionando con la paleta izquierda
+    CHECK_COLLISION_WITH_LEFT_PADDLE:
+    ; maxx1 > minx2 && minx1 < maxx2 && maxy1 > miny2 && miny1 < maxy2
+    ; BALL_X + BALL_SIZE > PADDLE_LEFT_X && BALL_X < PADDLE_LEFT_X + PADDLE_WIDTH
+    ; && BALL_Y + BALL_SIZE > PADDLE_LEFT_Y && BALL_Y < PADDLE_LEFT_Y + PADDLE_HEIGHT
 
-MOV AX, BALL_Y
-ADD AX, BALL_SIZE
-CMP AX, PADDLE_RIGHT_Y
-JNG CHECK_COLLISION_WITH_LEFT_PADDLE  ; Si no hay colision, verificar las colisiones con la paleta izquierda
-
-MOV AX, PADDLE_RIGHT_Y
-ADD AX, PADDLE_HEIGHT
-CMP BALL_Y, AX
-JNL CHECK_COLLISION_WITH_LEFT_PADDLE  ; Si no hay colision, verificar las colisiones con la paleta izquierda
-
-; Si llega a este punto, la pelota esta colisionando con la paleta derecha
-JMP NEG_VELOCITY_X
-
-; Comprobar si la pelota está colisionando con la paleta izquierda
-CHECK_COLLISION_WITH_LEFT_PADDLE:
-; maxx1 > minx2 && minx1 < maxx2 && maxy1 > miny2 && miny1 < maxy2
-; BALL_X + BALL_SIZE > PADDLE_LEFT_X && BALL_X < PADDLE_LEFT_X + PADDLE_WIDTH
-; && BALL_Y + BALL_SIZE > PADDLE_LEFT_Y && BALL_Y < PADDLE_LEFT_Y + PADDLE_HEIGHT
-
-MOV AX, BALL_X
-ADD AX, BALL_SIZE
-CMP AX, PADDLE_LEFT_X
-JNG EXIT_COLLISION_CHECK  ; Si no hay colision, salir de la comprobacion de colisión
+    MOV AX, BALL_X
+    ADD AX, BALL_SIZE
+    CMP AX, PADDLE_LEFT_X
+    JNG EXIT_COLLISION_CHECK  ; Si no hay colision, salir de la comprobacion de colisión
 		
 		MOV AX,PADDLE_LEFT_X
 		ADD AX,PADDLE_WIDTH
@@ -260,7 +260,7 @@ JNG EXIT_COLLISION_CHECK  ; Si no hay colision, salir de la comprobacion de coli
 		NEG_VELOCITY_Y:
     NEG BALL_VELOCITY_Y   ; Invierte la velocidad en Y de la pelota (BALL_VELOCITY_Y = -BALL_VELOCITY_Y)
     RET
-NEG_VELOCITY_X:
+    NEG_VELOCITY_X:
     NEG BALL_VELOCITY_X   ; Invierte la velocidad horizontal de la pelota
     RET
 			
@@ -270,29 +270,29 @@ NEG_VELOCITY_X:
 	
 	MOVE_PADDLES PROC NEAR               ; Proceso de movimiento de las paletas
 
-; Movimiento de la paleta izquierda
-
-; Comprueba si se está presionando alguna tecla (si no, verifica la paleta derecha)
-MOV AH, 01h
-INT 16h
-JZ CHECK_RIGHT_PADDLE_MOVEMENT ; ZF = 1, JZ -> Salta si es Cero
-
-; Comprueba qué tecla se ha presionado (AL = carácter ASCII)
-MOV AH, 00h
-INT 16h
-
-; Si es 'w' o 'W', mueve hacia arriba
-CMP AL, 77h ; 'w'
-JE MOVE_LEFT_PADDLE_UP
-CMP AL, 57h ; 'W'
-JE MOVE_LEFT_PADDLE_UP
-
-; Si es 's' o 'S', mueve hacia abajo
-CMP AL, 73h ; 's'
-JE MOVE_LEFT_PADDLE_DOWN
-CMP AL, 53h ; 'S'
-JE MOVE_LEFT_PADDLE_DOWN
-JMP CHECK_RIGHT_PADDLE_MOVEMENT
+    ; Movimiento de la paleta izquierda
+    
+    ; Comprueba si se está presionando alguna tecla (si no, verifica la paleta derecha)
+    MOV AH, 01h
+    INT 16h
+    JZ CHECK_RIGHT_PADDLE_MOVEMENT ; ZF = 1, JZ -> Salta si es Cero
+    
+    ; Comprueba qué tecla se ha presionado (AL = carácter ASCII)
+    MOV AH, 00h
+    INT 16h
+    
+    ; Si es 'w' o 'W', mueve hacia arriba
+    CMP AL, 77h ; 'w'
+    JE MOVE_LEFT_PADDLE_UP
+    CMP AL, 57h ; 'W'
+    JE MOVE_LEFT_PADDLE_UP
+    
+    ; Si es 's' o 'S', mueve hacia abajo
+    CMP AL, 73h ; 's'
+    JE MOVE_LEFT_PADDLE_DOWN
+    CMP AL, 53h ; 'S'
+    JE MOVE_LEFT_PADDLE_DOWN
+    JMP CHECK_RIGHT_PADDLE_MOVEMENT
 
 		MOVE_LEFT_PADDLE_UP:
 			MOV AX,PADDLE_VELOCITY
@@ -325,18 +325,18 @@ JMP CHECK_RIGHT_PADDLE_MOVEMENT
 ;      ; Movimiento de la paleta derecha
 CHECK_RIGHT_PADDLE_MOVEMENT:
 
-; Si es 'o' o 'O', mueve hacia arriba
-CMP AL, 6Fh ; 'o'
-JE MOVE_RIGHT_PADDLE_UP
-CMP AL, 4Fh ; 'O'
-JE MOVE_RIGHT_PADDLE_UP
-
-; Si es 'l' o 'L', mueve hacia abajo
-CMP AL, 6Ch ; 'l'
-JE MOVE_RIGHT_PADDLE_DOWN
-CMP AL, 4Ch ; 'L'
-JE MOVE_RIGHT_PADDLE_DOWN
-JMP EXIT_PADDLE_MOVEMENT
+    ; Si es 'o' o 'O', mueve hacia arriba
+    CMP AL, 6Fh ; 'o'
+    JE MOVE_RIGHT_PADDLE_UP
+    CMP AL, 4Fh ; 'O'
+    JE MOVE_RIGHT_PADDLE_UP
+    
+    ; Si es 'l' o 'L', mueve hacia abajo
+    CMP AL, 6Ch ; 'l'
+    JE MOVE_RIGHT_PADDLE_DOWN
+    CMP AL, 4Ch ; 'L'
+    JE MOVE_RIGHT_PADDLE_DOWN
+    JMP EXIT_PADDLE_MOVEMENT
 
 			MOVE_RIGHT_PADDLE_UP:
 				MOV AX,PADDLE_VELOCITY
