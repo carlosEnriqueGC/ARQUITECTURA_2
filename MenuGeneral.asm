@@ -247,6 +247,12 @@ uno:
         mov ax,2
         int 10h    ; aqui se expande la pantalla para mayor visualizacion 
         
+        mov ah, 09h
+        lea dx, msgMulti
+        int 21h
+        
+        mov ah, 0
+        int 16h 
               
         numero macro var
            mov ah,01h         ;Function(character read)
@@ -743,7 +749,8 @@ errorMG:
     msg1 db " Ingrese un numero (puede ser de dos cifras): $" 
     msge1 db "  ",13,10,"$"
     msgr1 db " Resultado: $"
-    msgError db " Ups has ingresado un numero invalido o una letra $"
+    msgError db " Ups has ingresado un numero invalido o una letra $" 
+    msgMulti db "Ingrese el primer numero seguido del segundo numero (sin espacios, los numeros  son de dos cifras).",13,10,"Ejemplo 1: 74*05=0370 ",13,10,"Ejemplo 2: 25*25=0625",13,10,"Presione cualquier tecla para continuar.$"
 
 ;variables Serie Aritmetica
 
