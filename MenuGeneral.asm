@@ -28,8 +28,6 @@ principal:
     cmp [opcionMG],'3'
     je tres
     cmp [opcionMG],'4'
-    je cuatro       
-    cmp [opcionMG],'5'
     je salirMG                            
     
     jmp errorMG    
@@ -531,21 +529,9 @@ dos:
     int 16h   
     jmp principal
     
-tres:
-    mov ax, 00h
-    mov bx, 00h
-    mov cx, 00h
-    mov dx, 00h
-    
-    
-    ;aqui iria el juego pero tengo miedo XD
-    
-    
-    mov ah, 0
-    int 16h 
-    jmp principal
+
         
-cuatro:
+tres:
     mov ax, 00h
     mov bx, 00h
     mov cx, 00h
@@ -673,7 +659,7 @@ bucle:
         
         mov ah, 0
         int 16h
-        jmp cuatro
+        jmp tres
     
     numero_invalido_sumar:  
         mov ax, 2
@@ -685,7 +671,7 @@ bucle:
         
         mov ah, 0
         int 16h
-        jmp cuatro
+        jmp tres
     
     numero_invalido_cantidad:  
         mov ax, 2
@@ -697,7 +683,7 @@ bucle:
         
         mov ah, 0
         int 16h
-        jmp cuatro 
+        jmp tres
      
     
 salirMG:
@@ -732,7 +718,7 @@ errorMG:
 
 
     opcionMG db 0
-    msgMG db "Proyecto Universidad Mariano Galvez",13,10,"Carlos Guzman y Diego Marroquin",13,10,"opciones:",13,10," 1. Operaciones basicas",13,10," 2. Palabra Palindroma",13,10," 3. Juego (pong)",13,10," 4. Serie Aritmetica",13,10," 5. Salida del programa",13,10,"opcion: $"
+    msgMG db "Proyecto Universidad Mariano Galvez",13,10,"Carlos Guzman y Diego Marroquin",13,10,"opciones:",13,10," 1. Operaciones basicas",13,10," 2. Palabra Palindroma",13,10," 3. Serie Aritmetica",13,10," 4. Salida del programa",13,10,"opcion: $"
     msgErrorMG db " Ups has ingresado un numero invalido o una letra $"
     msgSalidaMG db " Fin del proyecto Gracias $"
     
